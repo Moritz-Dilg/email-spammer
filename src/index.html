@@ -11,9 +11,8 @@
 	<script defer>
 		let userEmail = "";
 		window.api.getCredentials();
-		window.api.receiveFromD(async (event, data) => {
+		window.api.receiveCredentials(async (event, data) => {
 			userEmail = data.user;
-			console.log(userEmail, userEmail.indexOf('.'), userEmail.indexOf("@"));
 			if (userEmail.indexOf('.') < userEmail.indexOf('@')) {
 				document.getElementById('from').value = firstLetterToUpperCase(userEmail.substring(0, userEmail.indexOf('.'))) + " " + firstLetterToUpperCase(userEmail.substring(userEmail.indexOf('.') + 1, userEmail.indexOf('@')));
 			} else {
@@ -36,9 +35,22 @@
 				html: ""
 			};
 			window.api.sendMail(message);
+		};
+
+		const logout = () => {
+			window.api.logout();
 		}
 	</script>
-	<h1>EMail Spammer</h1>
+
+	<h1 style="display: flex;">EMail Spammer
+		<svg xmlns="http://www.w3.org/2000/svg" onclick="logout" viewbox="0 0 48 48" height="30" width="30"
+			style="margin: auto; margin-right: 0; cursor: pointer;">
+			<path fill="white"
+				d="M9 42q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h14.55v3H9v30h14.55v3Zm24.3-9.25-2.15-2.15 5.1-5.1h-17.5v-3h17.4l-5.1-5.1 2.15-2.15 8.8 8.8Z" />
+		</svg>
+	</h1>
+
+
 
 	<label for="count">Anzahl an Mails</label>
 	<input type="number" id="count" name="count"><br><br>

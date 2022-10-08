@@ -82,6 +82,16 @@ ipcMain.on("getCredentials", (event) => {
 	mainWindow.webContents.send("credentials", credentials);
 });
 
+ipcMain.on("logout", (event) => {
+	credentials = null;
+	transporter = null;
+	fs.unlink(path.join(__dirname, '../credentials.json'), (err: string) => {
+		if (err) throw err;
+		console.log('File deleted');
+	});
+	mainWindow.loadFile(path.join(__dirname, '../src/login.html'));
+});
+
 ipcMain.on("createTransport", (event, arg: transportConfigType) => {
 	// Update credentials file
 	fs.writeFile(path.join(__dirname, '../credentials.json'), JSON.stringify(arg), (err: string) => {

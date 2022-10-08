@@ -10,10 +10,13 @@ contextBridge.exposeInMainWorld('api', {
     sendMail: (message: messageType) => {
         ipcRenderer.invoke('sendMail', message);
     },
+    logout: () => {
+        ipcRenderer.send('logout');
+    },
     getCredentials: () => {
         ipcRenderer.send('getCredentials');
     },
-    receiveFromD: (callback: Function) => {
+    receiveCredentials: (callback: Function) => {
         ipcRenderer.on("credentials", (event, ...args) => callback(event, ...args));
     },
 });
