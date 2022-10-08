@@ -24,7 +24,7 @@
 	<h1>EMail Spammer</h1>
 
 	<label for="count">Anzahl an Mails</label>
-	<input type="text" id="count" name="count"><br><br>
+	<input type="number" id="count" name="count"><br><br>
 	<label for="from">Name</label>
 	<input type="text" id="from" name="from" placeholder="Dein Name"><br><br>
 	<label for="to">An</label>
@@ -32,7 +32,7 @@
 	<label for="subject">Betreff</label>
 	<input type="text" id="subject" name="subject" placeholder="Betreff"><br><br>
 	<label for="text">Text</label>
-	<input type="text" id="text" name="text" placeholder="Hello world?"><br><br>
+	<textarea type="text" id="text" name="text" placeholder="Hello world?"></textarea><br><br>
 	<button onclick="sendMail()">Send Email</button>
 </body>
 
