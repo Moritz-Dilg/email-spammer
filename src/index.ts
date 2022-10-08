@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { messageType, transportConfigType } from "../types";
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -51,18 +52,43 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 let transporter: any;
+let credentials: transportConfigType;
 
-ipcMain.on("createTransport", (event, arg: transportConfigType) => {
+const createTransport = (config: transportConfigType) => {
 	transporter = nodemailer.createTransport({
-		host: arg.host,
-		port: arg.port,
+		host: config.host,
+		port: config.port,
 		auth: {
-			user: arg.user,
-			pass: arg.pass
+			user: config.user,
+			pass: config.pass
 		}
 	});
 
 	mainWindow.loadFile(path.join(__dirname, '../src/index.html'));
+};
+
+fs.readFile(path.join(__dirname, '../credentials.json'), 'utf-8', (err: string, jsonString: string) => {
+	if (err) {
+		console.log("File read failed:", err);
+		return;
+	}
+	credentials = JSON.parse(jsonString);
+
+	createTransport(credentials);
+});
+
+
+ipcMain.on("getCredentials", (event) => {
+	mainWindow.webContents.send("credentials", credentials);
+});
+
+ipcMain.on("createTransport", (event, arg: transportConfigType) => {
+	// Update credentials file
+	fs.writeFile(path.join(__dirname, '../credentials.json'), JSON.stringify(arg), (err: string) => {
+		if (err) throw err;
+	});
+
+	createTransport(arg);
 });
 
 ipcMain.handle("sendMail", async (event, arg: messageType) => {

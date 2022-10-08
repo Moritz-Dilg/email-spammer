@@ -9,5 +9,11 @@ contextBridge.exposeInMainWorld('api', {
     },
     sendMail: (message: messageType) => {
         ipcRenderer.invoke('sendMail', message);
-    }
+    },
+    getCredentials: () => {
+        ipcRenderer.send('getCredentials');
+    },
+    receiveFromD: (callback: Function) => {
+        ipcRenderer.on("credentials", (event, ...args) => callback(event, ...args));
+    },
 });
