@@ -1,15 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 
 <head>
 	<meta charset="UTF-8">
-	<title>Hello World!</title>
-	<link rel="stylesheet" href="index.css">
+	<title>EMail Spammer</title>
+	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-	<h1>💖 Hello World!</h1>
-	<p>Welcome to your Electron application.</p>
+	<script defer>
+		const sendMail = () => {
+			const message = {
+				count: document.getElementById('count').value,
+				from: document.getElementById('from').value + " <foo@dilg-online.de>",
+				to: document.getElementById('to').value,
+				subject: document.getElementById('subject').value,
+				text: document.getElementById('text').value,
+				html: ""
+			};
+			window.api.sendMail(message);
+		}
+	</script>
+	<h1>EMail Spammer</h1>
+
+	<label for="count">Anzahl an Mails</label>
+	<input type="text" id="count" name="count"><br><br>
+	<label for="from">Name</label>
+	<input type="text" id="from" name="from" placeholder="Dein Name"><br><br>
+	<label for="to">An</label>
+	<input type="email" id="to" name="to" placeholder="example@domain.com"><br><br>
+	<label for="subject">Betreff</label>
+	<input type="text" id="subject" name="subject" placeholder="Betreff"><br><br>
+	<label for="text">Text</label>
+	<input type="text" id="text" name="text" placeholder="Hello world?"><br><br>
+	<button onclick="sendMail()">Send Email</button>
 </body>
 
 </html>
