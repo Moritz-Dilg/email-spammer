@@ -1,8 +1,8 @@
 {
 	"name": "email-spammer",
-	"productName": "email-spammer",
+	"productName": "EMail Spammer",
 	"version": "1.0.0",
-	"description": "My Electron application description",
+	"description": "Send many identical EMails to a single recipient",
 	"main": "dist/index.js",
 	"scripts": {
 		"start": "tsc && electron-forge start",

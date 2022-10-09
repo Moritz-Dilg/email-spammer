@@ -24,7 +24,7 @@ const createWindow = (): void => {
 	mainWindow.loadFile(path.join(__dirname, '../src/login.html'));
 
 	// Open the DevTools.
-	mainWindow.webContents.openDevTools();
+	// mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -55,6 +55,8 @@ let transporter: any;
 let credentials: transportConfigType;
 
 const createTransport = (config: transportConfigType) => {
+	if (!config) return;
+
 	transporter = nodemailer.createTransport({
 		host: config.host,
 		port: config.port,
@@ -97,6 +99,7 @@ ipcMain.on("createTransport", (event, arg: transportConfigType) => {
 	fs.writeFile(path.join(__dirname, '../credentials.json'), JSON.stringify(arg), (err: string) => {
 		if (err) throw err;
 	});
+	credentials = arg;
 
 	createTransport(arg);
 });
