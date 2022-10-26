@@ -16,7 +16,13 @@ contextBridge.exposeInMainWorld('api', {
     getCredentials: () => {
         ipcRenderer.send('getCredentials');
     },
+    getLastMessage: () => {
+        ipcRenderer.send('getLastMessage');
+    },
     receiveCredentials: (callback: Function) => {
         ipcRenderer.on("credentials", (event, ...args) => callback(event, ...args));
+    },
+    receiveLastMessage: (callback: Function) => {
+        ipcRenderer.on("lastMessage", (event, ...args) => callback(event, ...args));
     },
 });

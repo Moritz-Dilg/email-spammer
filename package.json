@@ -1,7 +1,7 @@
 {
 	"name": "email-spammer",
 	"productName": "EMail Spammer",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Send many identical EMails to a single recipient",
 	"main": "dist/index.js",
 	"scripts": {

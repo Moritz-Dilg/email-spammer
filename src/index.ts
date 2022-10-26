@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
-import { messageType, transportConfigType } from "../types";
+import { lastMessageType, messageType, transportConfigType } from "@types";
 const nodemailer = require('nodemailer');
 const fs = require('fs');
 
@@ -53,6 +53,7 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 let transporter: any;
 let credentials: transportConfigType;
+let lastMessage: lastMessageType | null = null;
 
 const createTransport = (config: transportConfigType) => {
 	if (!config) return;
@@ -80,8 +81,21 @@ fs.readFile(path.join(__dirname, '../credentials.json'), 'utf-8', (err: string, 
 });
 
 
+fs.readFile(path.join(__dirname, '../lastMessage.json'), 'utf-8', (err: string, jsonString: string) => {
+	if (err) {
+		console.log("File read failed:", err);
+		return;
+	}
+	lastMessage = JSON.parse(jsonString);
+});
+
+
 ipcMain.on("getCredentials", (event) => {
 	mainWindow.webContents.send("credentials", credentials);
+});
+
+ipcMain.on("getLastMessage", (event) => {
+	mainWindow.webContents.send("lastMessage", lastMessage);
 });
 
 ipcMain.on("logout", (event) => {
@@ -105,6 +119,14 @@ ipcMain.on("createTransport", (event, arg: transportConfigType) => {
 });
 
 ipcMain.handle("sendMail", async (event, arg: messageType) => {
+	// save last message
+	lastMessage = (({ count, from, subject, text }) => ({ count, from, subject, text }))(arg);
+	console.log(lastMessage);
+	fs.writeFile(path.join(__dirname, '../lastMessage.json'), JSON.stringify(lastMessage), (err: string) => {
+		if (err) throw err;
+	});
+
+
 	// send mail with defined transport object
 	for (let i = 0; i < arg.count; i++) {
 		await transporter.sendMail({

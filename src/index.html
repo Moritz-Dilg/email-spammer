@@ -10,6 +10,7 @@
 <body>
 	<script defer>
 		let userEmail = "";
+		let lastMessage;
 		window.api.getCredentials();
 		window.api.receiveCredentials(async (event, data) => {
 			userEmail = data.user;
@@ -19,6 +20,17 @@
 				document.getElementById('from').value = firstLetterToUpperCase(userEmail.substring(0, userEmail.indexOf('@')));
 			}
 
+		});
+
+		window.api.getLastMessage();
+		window.api.receiveLastMessage(async (event, data) => {
+			lastMessage = data;
+			if (lastMessage != null) {
+				document.getElementById('count').value = lastMessage.count;
+				document.getElementById('from').value = lastMessage.from.substring(0, lastMessage.from.indexOf('<') - 1);
+				document.getElementById('subject').value = lastMessage.subject;
+				document.getElementById('text').value = lastMessage.text;
+			}
 		});
 
 		const firstLetterToUpperCase = (string) => {
